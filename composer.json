@@ -28,12 +28,16 @@
   "require": {
     "php": ">=7.1",
     "lezhnev74/openapi-psr7-validator": "^0.13.1",
-    "phpunit/phpunit": "^7.0 || ^8.0",
+    "phpunit/phpunit": "^7.0 || ^8.0"
+  },
+  "require-dev": {
+    "laravel/lumen-framework": " ^5.7 || ^5.8",
     "symfony/psr-http-message-bridge": "^1.2",
     "nyholm/psr7": "^1.1"
   },
-  "require-dev": {
-    "laravel/lumen-framework": " ^5.7 || ^5.8"
+  "suggest": {
+    "symfony/psr-http-message-bridge": "Required to convert Symfony Response to PSR7 Response (Lumen)",
+    "nyholm/psr7": "Required to convert Symfony Response to PSR7 Response (Lumen)"
   },
   "autoload": {
     "psr-4": {
