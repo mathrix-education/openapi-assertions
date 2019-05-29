@@ -1,0 +1,45 @@
+{
+  "name": "mathrix/openapi-assertions",
+  "description": "Validate PSR-7 requests against OpenAPI specification. Heavily based on lezhnev74/openapi-psr7-validator.",
+  "version": "0.9.0",
+  "type": "library",
+  "keywords": [
+    "openapi",
+    "phpunit",
+    "assertions",
+    "lumen"
+  ],
+  "homepage": "https://github.com/mathrix-education/openapi-assertions",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mathieu Bour",
+      "email": "mathieu@mathrix.fr",
+      "homepage": "https://www.linkedin.com/in/mathieu-bour",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "mathieu@mathrix.fr",
+    "issues": "https://github.com/mathrix-education/openapi-processor/issues",
+    "wiki": "https://github.com/mathrix-education/openapi-processor/wiki",
+    "source": "https://github.com/mathrix-education/openapi-processor"
+  },
+  "require": {
+    "php": ">=7.1",
+    "lezhnev74/openapi-psr7-validator": "^0.13.1",
+    "phpunit/phpunit": "^7.0 || ^8.0",
+    "symfony/psr-http-message-bridge": "^1.2",
+    "nyholm/psr7": "^1.1"
+  },
+  "require-dev": {
+    "laravel/lumen-framework": " ^5.7 || ^5.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mathrix\\OpenAPI\\Assertions\\": "src"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
