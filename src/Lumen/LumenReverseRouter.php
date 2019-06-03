@@ -95,15 +95,18 @@ class LumenReverseRouter
                 return count($actualParts) !== count($routeParts);
             })
             // Reject routes which does not have the same arguments
-            ->reject(function ($routeData, $routeKey) use ($currentRouter) {
-                $pattern = "/{([a-zA-Z]+):[a-zA-Z0-9\/\\\+\-_\[\]\*\{\}\|\.\^]+}/";
-                $strippedUri = preg_replace($pattern, '{$1}', $routeKey);
-
-                $paramKeys = Collection::make(array_keys($currentRouter[2]))->map(function ($param) {
+            ->reject(function ($routeData, $routeKey) use ($currentRouter, $actualUri) {
+                $paramsKeys = array_map(function($param) {
                     return "{{$param}}";
-                });
+                }, array_keys($currentRouter[2]));
 
-                return !Str::contains($strippedUri, $paramKeys->toArray());
+                $resolvedUri = str_replace(
+                    $paramsKeys,
+                    array_values($currentRouter[2]),
+                    $routeData["uri"]
+                );
+
+                return $resolvedUri !== $actualUri;
             });
 
         if ($filteredRoutes->isEmpty()) {
