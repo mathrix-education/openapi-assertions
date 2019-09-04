@@ -96,7 +96,7 @@ class LumenReverseRouter
             })
             // Reject routes which does not have the same arguments
             ->reject(function ($routeData, $routeKey) use ($currentRouter, $actualUri) {
-                $paramsKeys = array_map(function($param) {
+                $paramsKeys = array_map(function ($param) {
                     return "{{$param}}";
                 }, array_keys($currentRouter[2]));
 
@@ -130,7 +130,10 @@ class LumenReverseRouter
      */
     public function getOperation(Request $request)
     {
-        $operationUri = $this->getUri($request->getMethod(), $request->getRequestUri());
+        $operationUri = $this->getUri(
+            $request->getMethod(),
+            $request->getPathInfo() // Path info = without query string
+        );
 
         return new OperationAddress($operationUri, strtolower($request->getMethod()));
     }

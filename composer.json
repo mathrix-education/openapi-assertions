@@ -1,7 +1,7 @@
 {
   "name": "mathrix/openapi-assertions",
   "description": "Validate PSR-7 requests against OpenAPI specification. Heavily based on lezhnev74/openapi-psr7-validator.",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "type": "library",
   "keywords": [
     "openapi",
@@ -27,11 +27,11 @@
   },
   "require": {
     "php": ">=7.1",
-    "lezhnev74/openapi-psr7-validator": "^0.13.1",
+    "lezhnev74/openapi-psr7-validator": "^0.16",
     "phpunit/phpunit": "^7.0 || ^8.0"
   },
   "require-dev": {
-    "laravel/lumen-framework": " ^5.7 || ^5.8",
+    "laravel/lumen-framework": " 5.7.* || 5.8.* || ^6.0",
     "symfony/psr-http-message-bridge": "^1.2",
     "nyholm/psr7": "^1.1"
   },
