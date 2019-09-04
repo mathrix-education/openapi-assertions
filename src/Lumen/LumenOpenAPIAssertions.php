@@ -52,7 +52,7 @@ trait LumenOpenAPIAssertions
         // Build validators
         $builder = (new ValidatorBuilder)->fromYamlFile(self::$openAPISpecificationPath);
 
-        self::$requestValidator = $builder->getServiceRequestValidator();
+        self::$requestValidator = $builder->getServerRequestValidator();
         self::$responseValidator = $builder->getResponseValidator();
         self::$schema = self::$requestValidator->getSchema();
 
