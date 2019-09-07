@@ -75,27 +75,31 @@ class LumenReverseRouter
         $currentRouter = $this->dispatch($method, $actualUri);
 
         $filteredRoutes = Collection::make(app()->router->getRoutes())
-            // Reject routes which do not match the method
+            ->map(function ($routeData) {
+                // Remove parameters regex constraints
+                $routeData["uri"] = preg_replace('/{([a-zA-Z]+)(:.*)}/', '{$1}', $routeData["uri"]);
+            })
             ->reject(function ($routeData, $routeKey) use ($method) {
+                // Reject routes which do not match the method
                 return !Str::startsWith($routeKey, strtoupper($method));
             })
-            // Reject routes which do not match the controller/action
             ->reject(function ($routeData) use ($currentRouter, $method, $actualUri) {
+                // Reject routes which do not match the controller/action
                 if (!isset($routeData["action"]["uses"]) || !isset($currentRouter[1]["uses"])) {
                     return true;
                 }
 
                 return $currentRouter[1]["uses"] !== $routeData["action"]["uses"];
             })
-            // Reject routes which have not the same amount of parts (split by "/")
             ->reject(function ($routeData) use ($actualUri) {
+                // Reject routes which have not the same amount of parts (split by "/")
                 $actualParts = explode("/", trim($actualUri, "/"));
                 $routeParts = explode("/", trim($routeData["uri"], "/"));
 
                 return count($actualParts) !== count($routeParts);
             })
-            // Reject routes which does not have the same arguments
             ->reject(function ($routeData, $routeKey) use ($currentRouter, $actualUri) {
+                // Reject routes which does not have the same arguments
                 $paramsKeys = array_map(function ($param) {
                     return "{{$param}}";
                 }, array_keys($currentRouter[2]));

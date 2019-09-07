@@ -3,9 +3,9 @@
 namespace Mathrix\OpenAPI\Assertions\Lumen;
 
 use cebe\openapi\spec\OpenApi;
-use Exception;
 use Illuminate\Http\Response;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use OpenAPIValidation\PSR7\ResponseValidator;
 use OpenAPIValidation\PSR7\ServerRequestValidator;
 use OpenAPIValidation\PSR7\ValidatorBuilder;
@@ -91,7 +91,7 @@ trait LumenOpenAPIAssertions
 
         try {
             self::assertNull(self::$responseValidator->validate($operation, $psrResponse));
-        } catch (Exception $exception) {
+        } catch (ValidationFailed $exception) {
             self::fail($exception->getMessage());
         }
     }

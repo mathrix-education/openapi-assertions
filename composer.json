@@ -1,7 +1,7 @@
 {
   "name": "mathrix/openapi-assertions",
   "description": "Validate PSR-7 requests against OpenAPI specification. Heavily based on lezhnev74/openapi-psr7-validator.",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "type": "library",
   "keywords": [
     "openapi",
