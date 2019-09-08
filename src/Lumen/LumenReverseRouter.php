@@ -78,6 +78,7 @@ class LumenReverseRouter
             ->map(function ($routeData) {
                 // Remove parameters regex constraints
                 $routeData["uri"] = preg_replace('/{([a-zA-Z]+)(:.*)}/', '{$1}', $routeData["uri"]);
+                return $routeData;
             })
             ->reject(function ($routeData, $routeKey) use ($method) {
                 // Reject routes which do not match the method
