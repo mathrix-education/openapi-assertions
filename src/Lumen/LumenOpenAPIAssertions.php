@@ -6,10 +6,12 @@ use cebe\openapi\spec\OpenApi;
 use Illuminate\Http\Response;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use OpenAPIValidation\PSR7\Exception\ValidationFailed;
+use OpenAPIValidation\PSR7\OperationAddress;
 use OpenAPIValidation\PSR7\ResponseValidator;
 use OpenAPIValidation\PSR7\ServerRequestValidator;
 use OpenAPIValidation\PSR7\ValidatorBuilder;
 use PHPUnit\Framework\Assert;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 
@@ -87,12 +89,36 @@ trait LumenOpenAPIAssertions
     {
         $app = app();
         $operation = self::$reverseRouter->getOperation($app["request"]);
-        $psrResponse = self::convertIlluminateToPsr($response);
+
+        self::assertOpenAPI($response, $operation);
+    }
+
+    /**
+     * Assert that the response matches the OpenAPI specification.
+     *
+     * @param Response $response The Lumen Response
+     * @param OperationAddress $operation The Operation Address.
+     */
+    public static function assertOpenAPI($response, OperationAddress $operation)
+    {
+        if (!$response instanceof ResponseInterface) {
+            $psrResponse = self::convertIlluminateToPsr($response);
+        } else {
+            $psrResponse = $response;
+        }
 
         try {
             self::assertNull(self::$responseValidator->validate($operation, $psrResponse));
         } catch (ValidationFailed $exception) {
-            self::fail($exception->getMessage());
+            // Iterate over exceptions to build the failure message.
+            $messages = [$exception->getMessage()];
+
+            while ($exception->getPrevious() !== null) {
+                $exception = $exception->getPrevious();
+                $messages[] = $exception->getMessage();
+            }
+
+            self::fail(implode("\n", $messages));
         }
     }
 }
