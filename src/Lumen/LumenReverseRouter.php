@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mathrix\OpenAPI\Assertions\Lumen;
 
 use FastRoute\Dispatcher;
@@ -9,20 +11,24 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use OpenAPIValidation\PSR7\OperationAddress;
 use UnexpectedValueException;
+use function app;
+use function array_keys;
+use function array_map;
+use function array_values;
+use function count;
+use function explode;
 use function FastRoute\simpleDispatcher;
+use function mb_strtoupper;
+use function preg_replace;
+use function str_replace;
+use function strtolower;
+use function strtoupper;
+use function trim;
 
-/**
- * Class LumenReverseRouter.
- *
- * @author Mathieu Bour <mathieu@mathrix.fr>
- * @copyright Mathrix Education SA.
- * @since 0.9.0
- */
 class LumenReverseRouter
 {
     /** @var Dispatcher $dispatcher The Lumen Dispatcher */
     private $dispatcher;
-
 
     /**
      * Get the Lumen Dispatcher
@@ -32,9 +38,9 @@ class LumenReverseRouter
     protected function getDispatcher(): Dispatcher
     {
         if ($this->dispatcher === null) {
-            $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
+            $this->dispatcher = simpleDispatcher(static function (RouteCollector $r) {
                 foreach (app()->router->getRoutes() as $route) {
-                    $r->addRoute($route["method"], $route["uri"], $route["action"]);
+                    $r->addRoute($route['method'], $route['uri'], $route['action']);
                 }
             });
         }
@@ -42,12 +48,11 @@ class LumenReverseRouter
         return $this->dispatcher;
     }
 
-
     /**
      * Dispatch an uri.
      *
      * @param string $method The method.
-     * @param string $uri The uri.
+     * @param string $uri    The uri.
      *
      * @return array
      */
@@ -58,14 +63,13 @@ class LumenReverseRouter
         return $this->getDispatcher()->dispatch($method, $uri);
     }
 
-
     /**
      * Get the OpenAPI URI based on the actual request URI.
      * This method far from perfect, but should work in most of cases.
      *
      * @link https://stackoverflow.com/questions/56352531/reverse-routing-in-lumen
      *
-     * @param string $method The HTTP method (GET, POST, PUT, PATCH, DELETE etc.)
+     * @param string $method    The HTTP method (GET, POST, PUT, PATCH, DELETE etc.)
      * @param string $actualUri The actual request URI
      *
      * @return string
@@ -75,40 +79,41 @@ class LumenReverseRouter
         $currentRouter = $this->dispatch($method, $actualUri);
 
         $filteredRoutes = Collection::make(app()->router->getRoutes())
-            ->map(function ($routeData) {
+            ->map(static function ($routeData) {
                 // Remove parameters regex constraints
-                $routeData["uri"] = preg_replace('/{([a-zA-Z]+)(:.*)}/', '{$1}', $routeData["uri"]);
+                $routeData['uri'] = preg_replace('/{([a-zA-Z]+)(:.*)}/', '{$1}', $routeData['uri']);
+
                 return $routeData;
             })
-            ->reject(function ($routeData, $routeKey) use ($method) {
+            ->reject(static function ($routeData, $routeKey) use ($method) {
                 // Reject routes which do not match the method
                 return !Str::startsWith($routeKey, strtoupper($method));
             })
-            ->reject(function ($routeData) use ($currentRouter, $method, $actualUri) {
+            ->reject(static function ($routeData) use ($currentRouter) {
                 // Reject routes which do not match the controller/action
-                if (!isset($routeData["action"]["uses"]) || !isset($currentRouter[1]["uses"])) {
+                if (!isset($routeData['action']['uses']) || !isset($currentRouter[1]['uses'])) {
                     return true;
                 }
 
-                return $currentRouter[1]["uses"] !== $routeData["action"]["uses"];
+                return $currentRouter[1]['uses'] !== $routeData['action']['uses'];
             })
-            ->reject(function ($routeData) use ($actualUri) {
+            ->reject(static function ($routeData) use ($actualUri) {
                 // Reject routes which have not the same amount of parts (split by "/")
-                $actualParts = explode("/", trim($actualUri, "/"));
-                $routeParts = explode("/", trim($routeData["uri"], "/"));
+                $actualParts = explode('/', trim($actualUri, '/'));
+                $routeParts  = explode('/', trim($routeData['uri'], '/'));
 
                 return count($actualParts) !== count($routeParts);
             })
-            ->reject(function ($routeData, $routeKey) use ($currentRouter, $actualUri) {
+            ->reject(static function ($routeData, $routeKey) use ($currentRouter, $actualUri) {
                 // Reject routes which does not have the same arguments
-                $paramsKeys = array_map(function ($param) {
+                $paramsKeys = array_map(static function ($param) {
                     return "{{$param}}";
                 }, array_keys($currentRouter[2]));
 
                 $resolvedUri = str_replace(
                     $paramsKeys,
                     array_values($currentRouter[2]),
-                    $routeData["uri"]
+                    $routeData['uri']
                 );
 
                 return $resolvedUri !== $actualUri;
@@ -116,15 +121,16 @@ class LumenReverseRouter
 
         if ($filteredRoutes->isEmpty()) {
             return $actualUri;
-        } else if ($filteredRoutes->count() === 1) {
+        }
+
+        if ($filteredRoutes->count() === 1) {
             $match = $filteredRoutes->first();
 
-            return $match["uri"];
-        } else {
-            throw new UnexpectedValueException("Found more than one route matching the given criteria.");
+            return $match['uri'];
         }
-    }
 
+        throw new UnexpectedValueException('Found more than one route matching the given criteria.');
+    }
 
     /**
      * Get the OperationAddress Object, to validate ServerRequest and Response against OpenAPI specification.

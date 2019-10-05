@@ -1,7 +1,10 @@
 # OpenAPI Assertions
 
 Allow to test API responses against an OpenAPI v3 specification.
-The library heavily relies on [lezhnev74/openapi-psr7-validator](https://github.com/lezhnev74/openapi-psr7-validator).
+The library heavily relies on
+[league/openapi-psr7-validator](https://github.com/thephpleague/openapi-psr7-validator)
+formerly
+[lezhnev74/openapi-psr7-validator](https://github.com/lezhnev74/openapi-psr7-validator).
 
 ## Lumen
 In order to use OpenAPI assertions with lumen, you need to install symfony/psr-http-message-bridge and nyholm/psr7. You can do it with:
