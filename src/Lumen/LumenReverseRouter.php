@@ -9,7 +9,7 @@ use FastRoute\RouteCollector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use OpenAPIValidation\PSR7\OperationAddress;
+use League\OpenAPIValidation\PSR7\OperationAddress;
 use UnexpectedValueException;
 use function app;
 use function array_keys;
@@ -74,7 +74,7 @@ class LumenReverseRouter
      *
      * @return string
      */
-    public function getUri(string $method, string $actualUri)
+    public function getUri(string $method, string $actualUri): string
     {
         $currentRouter = $this->dispatch($method, $actualUri);
 
@@ -91,7 +91,7 @@ class LumenReverseRouter
             })
             ->reject(static function ($routeData) use ($currentRouter) {
                 // Reject routes which do not match the controller/action
-                if (!isset($routeData['action']['uses']) || !isset($currentRouter[1]['uses'])) {
+                if (!isset($routeData['action']['uses'], $currentRouter[1]['uses'])) {
                     return true;
                 }
 
@@ -139,7 +139,7 @@ class LumenReverseRouter
      *
      * @return OperationAddress
      */
-    public function getOperation(Request $request)
+    public function getOperation(Request $request): OperationAddress
     {
         $operationUri = $this->getUri(
             $request->getMethod(),

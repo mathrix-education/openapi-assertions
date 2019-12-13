@@ -6,12 +6,12 @@ namespace Mathrix\OpenAPI\Assertions\Lumen;
 
 use cebe\openapi\spec\OpenApi;
 use Illuminate\Http\Response;
+use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
+use League\OpenAPIValidation\PSR7\OperationAddress;
+use League\OpenAPIValidation\PSR7\ResponseValidator;
+use League\OpenAPIValidation\PSR7\ServerRequestValidator;
+use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use OpenAPIValidation\PSR7\Exception\ValidationFailed;
-use OpenAPIValidation\PSR7\OperationAddress;
-use OpenAPIValidation\PSR7\ResponseValidator;
-use OpenAPIValidation\PSR7\ServerRequestValidator;
-use OpenAPIValidation\PSR7\ValidatorBuilder;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
@@ -97,7 +97,7 @@ trait LumenOpenAPIAssertions
      * @param Response         $response  The Lumen Response
      * @param OperationAddress $operation The Operation Address.
      */
-    public static function assertOpenAPI($response, OperationAddress $operation)
+    public static function assertOpenAPI($response, OperationAddress $operation): void
     {
         if (!$response instanceof ResponseInterface) {
             $psrResponse = self::convertIlluminateToPsr($response);
