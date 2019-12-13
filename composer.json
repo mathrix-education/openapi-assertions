@@ -1,7 +1,7 @@
 {
-  "name": "mathrix/openapi-assertions",
+  "name": "mathrix-education/openapi-assertions",
   "description": "Validate PSR-7 requests against OpenAPI specification. Heavily based on league/openapi-psr7-validator.",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "type": "library",
   "keywords": [
     "openapi",
@@ -28,11 +28,11 @@
   "require": {
     "php": ">=7.1",
     "phpunit/phpunit": "^7.0 || ^8.0",
-    "league/openapi-psr7-validator": "^0.3.2"
+    "league/openapi-psr7-validator": "^0.5.1"
   },
   "require-dev": {
     "laravel/lumen-framework": " 5.7.* || 5.8.* || ^6.0",
-    "mathrix/coding-standard": "0.9.1",
+    "mathrix-education/coding-standard": "^1.0.0",
     "symfony/psr-http-message-bridge": "^1.2",
     "nyholm/psr7": "^1.1"
   },
@@ -43,12 +43,6 @@
   "autoload": {
     "psr-4": {
       "Mathrix\\OpenAPI\\Assertions\\": "src"
-    }
-  },
-  "repositories": {
-    "mathrix/coding-standards": {
-      "type": "vcs",
-      "url": "git@github.com:mathrix-education/coding-standard.git"
     }
   },
   "minimum-stability": "stable",

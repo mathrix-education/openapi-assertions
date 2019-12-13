@@ -1,6 +1,18 @@
-# OpenAPI Assertions
+# mathrix-education/openapi-assertions
 
-Allow to test API responses against an OpenAPI v3 specification.
+![version]
+![license]
+![php-version]
+
+[version]: https://img.shields.io/packagist/v/mathrix-education/openapi-assertions?style=flat-square
+[license]: https://img.shields.io/packagist/l/mathrix-education/openapi-assertions?style=flat-square
+[php-version]: https://img.shields.io/packagist/php-v/mathrix-education/openapi-assertions?style=flat-square
+
+Base library of all Mathrix Education SA PHP projects. 
+
+Allow to test API responses against an OpenAPI v3 specification. Proudly
+maintained by Mathieu Bour <mathieu@mathrix.fr>, Vice-CTO.
+
 The library heavily relies on
 [league/openapi-psr7-validator](https://github.com/thephpleague/openapi-psr7-validator)
 formerly
